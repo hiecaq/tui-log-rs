@@ -1,16 +1,15 @@
-use std::io;
-use tui_log::{TuiLogger, Writable};
+use log::info;
 use log::LevelFilter;
-use ratatui::backend::{CrosstermBackend, Backend};
-use ratatui::Terminal;
-use ratatui::layout::{Layout, Direction, Constraint, Rect};
-use ratatui::widgets::{Block, Borders, StatefulWidget, Widget};
+use ratatui::backend::{Backend, CrosstermBackend};
 use ratatui::buffer::Buffer;
+use ratatui::layout::{Constraint, Direction, Layout, Rect};
 use ratatui::style::Style;
-use std::sync::{Arc, Mutex};
+use ratatui::widgets::{Block, Borders, StatefulWidget, Widget};
+use ratatui::Terminal;
 use std::borrow::BorrowMut;
-use log::{info};
-
+use std::io;
+use std::sync::{Arc, Mutex};
+use tui_log::{TuiLogger, Writable};
 
 #[derive(Default, Clone)]
 pub struct LogWidgetState {
@@ -66,29 +65,27 @@ fn main() -> Result<(), io::Error> {
     }
 }
 
-fn draw<B: Backend>(terminal: &mut Terminal<B>, log_widget_state: Arc<Mutex<LogWidgetState>>) -> io::Result<()>{
+fn draw<B: Backend>(
+    terminal: &mut Terminal<B>,
+    log_widget_state: Arc<Mutex<LogWidgetState>>,
+) -> io::Result<()> {
     terminal.draw(|f| {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .margin(1)
-            .constraints(
-                [
-                    Constraint::Percentage(20),
-                    Constraint::Percentage(80),
-                ].as_ref()
-            )
+            .constraints([Constraint::Percentage(20), Constraint::Percentage(80)].as_ref())
             .split(f.size());
-        let block = Block::default()
-            .title("Block")
-            .borders(Borders::ALL);
+        let block = Block::default().title("Block").borders(Borders::ALL);
         f.render_widget(block, chunks[0]);
-        let block = Block::default()
-            .title("Log")
-            .borders(Borders::ALL);
+        let block = Block::default().title("Log").borders(Borders::ALL);
         f.render_widget(block, chunks[1]);
         let inset_area = edge_inset(&chunks[1], 1);
         let log_widget = LogWidget::default();
-        f.render_stateful_widget(log_widget, inset_area, log_widget_state.lock().unwrap().borrow_mut());
+        f.render_stateful_widget(
+            log_widget,
+            inset_area,
+            log_widget_state.lock().unwrap().borrow_mut(),
+        );
     })?;
     Ok(())
 }
