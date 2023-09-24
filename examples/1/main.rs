@@ -1,12 +1,12 @@
 use std::io;
 use tui_log::{TuiLogger, Writable};
 use log::LevelFilter;
-use tui::backend::{CrosstermBackend, Backend};
-use tui::Terminal;
-use tui::layout::{Layout, Direction, Constraint, Rect};
-use tui::widgets::{Block, Borders, StatefulWidget, Widget};
-use tui::buffer::Buffer;
-use tui::style::Style;
+use ratatui::backend::{CrosstermBackend, Backend};
+use ratatui::Terminal;
+use ratatui::layout::{Layout, Direction, Constraint, Rect};
+use ratatui::widgets::{Block, Borders, StatefulWidget, Widget};
+use ratatui::buffer::Buffer;
+use ratatui::style::Style;
 use std::sync::{Arc, Mutex};
 use std::borrow::BorrowMut;
 use log::{info};
